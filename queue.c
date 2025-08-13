@@ -70,3 +70,16 @@ int queue_size(t_queue *queue)
 {
     return (queue->size);
 }
+
+// Check if philosopher_id is already in the queue
+int queue_contains(t_queue *queue, int philosopher_id)
+{
+    int i;
+    for (i = 0; i < queue->size; i++)
+    {
+        int idx = (queue->head + i) % queue->capacity;
+        if (queue->buffer[idx] == philosopher_id)
+            return 1;
+    }
+    return 0;
+}

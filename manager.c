@@ -59,34 +59,44 @@ static void handle_completions(t_data *data)
 void *manager_routine(void *arg)
 {
     t_data *data = (t_data *)arg;
-    int philosopher_id;
-    
+    int qsize, idx, candidate_id;
+
     while (!data->simulation_over)
     {
         pthread_mutex_lock(&data->admission_mutex);
-        
-        // Handle any completion signals first
+
         handle_completions(data);
-        
-        // Process admission queue (FIFO)
-        if (!queue_is_empty(&data->admission_queue))
+
+        qsize = queue_size(&data->admission_queue);
+        for (idx = 0; idx < qsize; idx++)
         {
-            philosopher_id = queue_peek(&data->admission_queue);
-            
-            // Check if this philosopher can be granted access
-            if (forks_available(data, philosopher_id))
+            candidate_id = data->admission_queue.buffer[(data->admission_queue.head + idx) % data->admission_queue.capacity];
+            if (forks_available(data, candidate_id))
             {
-                // Remove from queue and grant permission
-                queue_dequeue(&data->admission_queue);
-                grant_permission(data, philosopher_id);
+                // Remove candidate from queue and grant permission
+                int remove_idx = (data->admission_queue.head + idx) % data->admission_queue.capacity;
+                int i = idx;
+                while (i > 0)
+                {
+                    int prev_idx = (remove_idx - 1 + data->admission_queue.capacity) % data->admission_queue.capacity;
+                    data->admission_queue.buffer[remove_idx] = data->admission_queue.buffer[prev_idx];
+                    remove_idx = prev_idx;
+                    i--;
+                }
+                data->admission_queue.head = (data->admission_queue.head + 1) % data->admission_queue.capacity;
+                data->admission_queue.size--;
+                grant_permission(data, candidate_id);
+
+                // After granting, update qsize and idx to continue scanning
+                qsize--;
+                idx--;
             }
         }
-        
+
         pthread_mutex_unlock(&data->admission_mutex);
-        
-        // Manager backoff - prevent busy waiting
-        usleep(500); // 0.5ms
+
+        usleep(500);
     }
-    
+
     return (NULL);
 }

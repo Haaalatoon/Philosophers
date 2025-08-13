@@ -90,6 +90,7 @@ int         queue_dequeue(t_queue *queue);
 int         queue_peek(t_queue *queue);
 int         queue_is_empty(t_queue *queue);
 int         queue_size(t_queue *queue);
+int         queue_contains(t_queue *queue, int philosopher_id);
 
 // philosopher.c
 void        *philosopher_routine(void *arg);

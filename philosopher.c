@@ -4,13 +4,16 @@
 static void request_eating_permission(t_philosopher *philo)
 {
     t_data *data = philo->data;
-    
+
     pthread_mutex_lock(&data->admission_mutex);
-    
-    // Add self to FIFO queue with timestamp
-    philo->request_time = get_time_ms();
-    queue_enqueue(&data->admission_queue, philo->id);
-    
+
+    // Only enqueue if not already waiting
+    if (!queue_contains(&data->admission_queue, philo->id))
+    {
+        philo->request_time = get_time_ms();
+        queue_enqueue(&data->admission_queue, philo->id);
+    }
+
     pthread_mutex_unlock(&data->admission_mutex);
 }
 
