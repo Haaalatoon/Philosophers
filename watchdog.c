@@ -131,7 +131,7 @@ void *watchdog_routine(void *arg)
             time_since_meal = current_time - data->philosophers[most_starved].last_meal_time;
             
             // If philosopher is approaching starvation threshold
-            if (time_since_meal > (data->time_to_die * 0.8)) // 80% of time_to_die
+            if (time_since_meal > (data->time_to_die)) // 80% of time_to_die
             {
                 // Promote to front of queue if not already waiting for permission
                 if (!data->philosophers[most_starved].gate_flag)
