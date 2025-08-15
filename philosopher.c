@@ -89,7 +89,8 @@ static void signal_completion(t_philosopher *philo)
 // Sleep phase
 static void sleep_phase(t_philosopher *philo)
 {
-    print_status(philo, "is sleeping");
+    if (philo->data->simulation_over)
+        print_status(philo, "is sleeping");
     ft_sleep(philo->data->time_to_sleep);
 }
 
@@ -98,7 +99,7 @@ static void think(t_philosopher *philo)
 {
     print_status(philo, "is thinking");
     // Brief thinking time to prevent excessive CPU usage
-    ft_sleep(1);
+    usleep(100); // 1 ms
 }
 
 // Main philosopher thread routine

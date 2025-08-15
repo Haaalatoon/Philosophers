@@ -142,7 +142,7 @@ void *watchdog_routine(void *arg)
         pthread_mutex_unlock(&data->admission_mutex);
         
         // Watchdog check interval - must be frequent for death detection
-        usleep(1000); // 1ms
+        usleep(100); // 1ms
     }
     
     return (NULL);
