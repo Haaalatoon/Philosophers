@@ -35,7 +35,8 @@ static void	remove_from_queue_and_grant(t_data *data, int idx, int candidate_id)
 	{
 		prev_idx = (remove_idx - 1 + data->admission_queue.capacity)
 			% data->admission_queue.capacity;
-		data->admission_queue.buffer[remove_idx] = data->admission_queue.buffer[prev_idx];
+		data->admission_queue.buffer[remove_idx]
+			= data->admission_queue.buffer[prev_idx];
 		remove_idx = prev_idx;
 		i--;
 	}

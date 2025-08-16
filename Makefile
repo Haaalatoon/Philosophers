@@ -4,7 +4,7 @@ CC = cc
 CFLAGS = -Wall -Wextra -Werror -pthread
 RM = rm -f
 
-SRCS = main.c init.c utils.c queue.c another_queue.c philosopher.c routine.c manager.c forks.c watchdog.c
+SRCS = main.c init.c utils.c queue.c another_queue.c philosopher.c routine.c manager.c forks.c watchdog.c threads.c starvation.c
 
 OBJS = $(SRCS:.c=.o)
 

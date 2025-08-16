@@ -8,7 +8,7 @@
 # include <sys/time.h>
 # include <unistd.h>
 
-struct			s_data;
+struct				s_data;
 
 typedef struct s_queue
 {
@@ -93,7 +93,20 @@ int					forks_available(t_data *data, int philosopher_id);
 void				reserve_forks(t_data *data, int philosopher_id);
 void				free_forks(t_data *data, int philosopher_id);
 
+// threads.c
+int					start_threads(t_data *data);
+void				join_threads(t_data *data);
+void				join_and_cleanup(t_data *data);
+int					create_manager_thread(t_data *data);
+int					create_watchdog_thread(t_data *data);
+
 // watchdog.c
 void				*watchdog_routine(void *arg);
+
+// starvation.c
+void				handle_starvation(t_data *data);
+int					find_most_starved(t_data *data);
+void				promote_starving_philosopher(t_data *data,
+						int philosopher_id);
 
 #endif
