@@ -1,6 +1,18 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   routine.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: hrhilane <marvin@42.fr>                    +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/08/16 06:50:31 by hrhilane          #+#    #+#             */
+/*   Updated: 2025/08/16 06:50:35 by hrhilane         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "philo.h"
 
-static void	take_release_forks(t_philosopher *philo, int first_fork, int second_fork)
+static void	take_release(t_philosopher *philo, int first_fork, int second_fork)
 {
 	t_data	*data;
 
@@ -54,7 +66,7 @@ void	eat(t_philosopher *philo)
 		single_philosopher(philo, first_fork);
 		return ;
 	}
-	take_release_forks(philo, first_fork, second_fork);
+	take_release(philo, first_fork, second_fork);
 }
 
 void	sleep_phase(t_philosopher *philo)
