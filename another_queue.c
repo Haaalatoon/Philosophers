@@ -19,15 +19,15 @@ int	queue_peek(t_queue *queue)
 	return (queue->buffer[queue->head]);
 }
 
-int	queue_is_empty(t_queue *queue)
-{
-	return (queue->size == 0);
-}
+// int	queue_is_empty(t_queue *queue)
+// {
+// 	return (queue->size == 0);
+// }
 
-int	queue_size(t_queue *queue)
-{
-	return (queue->size);
-}
+// int	queue_size(t_queue *queue)
+// {
+// 	return (queue->size);
+// }
 
 int	queue_contains(t_queue *queue, int philosopher_id)
 {

@@ -20,10 +20,7 @@ int	main(int argc, char **argv)
 	if (parse_arguments(argc, argv, &data) != 0)
 		return (1);
 	if (init_data(&data) != 0)
-	{
-		printf("Error: Failed to initialize data\n");
 		return (1);
-	}
 	if (create_manager_thread(&data) != 0)
 		return (1);
 	if (create_watchdog_thread(&data) != 0)

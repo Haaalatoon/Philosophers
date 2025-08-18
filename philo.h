@@ -47,7 +47,6 @@ typedef enum e_fork_state
 {
 	FORK_FREE,
 	FORK_RESERVED,
-	FORK_TAKEN
 }					t_fork_state;
 
 typedef struct s_data
@@ -85,8 +84,8 @@ void				queue_destroy(t_queue *queue);
 int					queue_enqueue(t_queue *queue, int philosopher_id);
 int					queue_dequeue(t_queue *queue);
 int					queue_peek(t_queue *queue);
-int					queue_is_empty(t_queue *queue);
-int					queue_size(t_queue *queue);
+// int					queue_is_empty(t_queue *queue);
+// int					queue_size(t_queue *queue);
 int					queue_contains(t_queue *queue, int philosopher_id);
 
 // philosopher.c

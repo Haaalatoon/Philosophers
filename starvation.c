@@ -45,13 +45,15 @@ void	promote_starving_philosopher(t_data *data, int philosopher_id)
 	if (queue_init(&temp_queue, data->num_philosophers * 2) != 0)
 		return ;
 	queue_enqueue(&temp_queue, philosopher_id);
-	while (!queue_is_empty(&data->admission_queue))
+	// while (!queue_is_empty(&data->admission_queue))
+	while (!data->admission_queue.size)
 	{
 		current_id = queue_dequeue(&data->admission_queue);
 		if (current_id != philosopher_id)
 			queue_enqueue(&temp_queue, current_id);
 	}
-	while (!queue_is_empty(&temp_queue))
+	// while (!queue_is_empty(&temp_queue))
+	while (!temp_queue.size)
 	{
 		current_id = queue_dequeue(&temp_queue);
 		queue_enqueue(&data->admission_queue, current_id);
