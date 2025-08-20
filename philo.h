@@ -94,9 +94,9 @@ int					queue_contains(t_queue *queue, int philosopher_id);
 void				*philosopher_routine(void *arg);
 
 // routine.c
-void				eat(t_philosopher *philo);
-void				sleep_phase(t_philosopher *philo);
-void				think(t_philosopher *philo);
+void				eating(t_philosopher *philo);
+void				sleeping(t_philosopher *philo);
+void				thinking(t_philosopher *philo);
 
 // manager.c
 void				*manager_routine(void *arg);
@@ -121,5 +121,9 @@ void				handle_starvation(t_data *data);
 int					find_most_starved(t_data *data);
 void				promote_starving_philosopher(t_data *data,
 						int philosopher_id);
+// simulation_utils.c
+int					is_simulation_over(t_data *data);
+void				set_simulation_over(t_data *data);
+void				destroy_mutexes(t_data *data);
 
 #endif

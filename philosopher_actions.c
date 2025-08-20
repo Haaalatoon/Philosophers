@@ -42,7 +42,7 @@ static void	single_philosopher(t_philosopher *philo, int fork)
 	pthread_mutex_unlock(&data->forks[fork]);
 }
 
-void	eat(t_philosopher *philo)
+void	eating(t_philosopher *philo)
 {
 	t_data	*data;
 	int		left_fork;
@@ -71,7 +71,7 @@ void	eat(t_philosopher *philo)
 	take_release(philo, first_fork, second_fork);
 }
 
-void	sleep_phase(t_philosopher *philo)
+void	sleeping(t_philosopher *philo)
 {
 	if (philo->meals_eaten < philo->data->meals_required
 		|| philo->data->meals_required <= 0)
@@ -79,7 +79,7 @@ void	sleep_phase(t_philosopher *philo)
 	ft_sleep(philo->data->time_to_sleep);
 }
 
-void	think(t_philosopher *philo)
+void	thinking(t_philosopher *philo)
 {
 	print_status(philo, "is thinking");
 	usleep(100);

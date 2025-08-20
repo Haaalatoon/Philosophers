@@ -71,17 +71,17 @@ void	*philosopher_routine(void *arg)
 		if (data->meals_required > 0
 			&& philo->meals_eaten >= data->meals_required)
 			break ;
-		think(philo);
+		thinking(philo);
 		if (is_simulation_over(data))
 			break ;
 		request_and_wait(philo);
 		if (is_simulation_over(data))
 			break ;
-		eat(philo);
+		eating(philo);
 		signal_completion(philo);
 		if (is_simulation_over(data))
 			break ;
-		sleep_phase(philo);
+		sleeping(philo);
 	}
 	return (NULL);
 }
