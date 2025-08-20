@@ -28,8 +28,17 @@ static void	request_eating_permission(t_philosopher *philo)
 
 static void	wait_for_permission(t_philosopher *philo)
 {
-	while (!philo->gate_flag && !philo->data->simulation_over)
-		usleep(100);
+	int	should_continue;
+
+	should_continue = 1;
+	while (should_continue && !is_simulation_over(philo->data))
+	{
+		pthread_mutex_lock(&philo->state_mutex);
+		should_continue = !philo->gate_flag;
+		pthread_mutex_unlock(&philo->state_mutex);
+		if (should_continue)
+			usleep(100);
+	}
 }
 
 static void	request_and_wait(t_philosopher *philo)
@@ -41,8 +50,10 @@ static void	request_and_wait(t_philosopher *philo)
 static void	signal_completion(t_philosopher *philo)
 {
 	pthread_mutex_lock(&philo->data->admission_mutex);
+	pthread_mutex_lock(&philo->state_mutex);
 	philo->done_flag = 1;
 	philo->gate_flag = 0;
+	pthread_mutex_unlock(&philo->state_mutex);
 	pthread_mutex_unlock(&philo->data->admission_mutex);
 }
 
@@ -55,20 +66,20 @@ void	*philosopher_routine(void *arg)
 	data = philo->data;
 	if (philo->id % 2 == 1)
 		ft_sleep(data->time_to_eat / 2);
-	while (!data->simulation_over)
+	while (!is_simulation_over(data))
 	{
 		if (data->meals_required > 0
 			&& philo->meals_eaten >= data->meals_required)
 			break ;
 		think(philo);
-		if (data->simulation_over)
+		if (is_simulation_over(data))
 			break ;
 		request_and_wait(philo);
-		if (data->simulation_over)
+		if (is_simulation_over(data))
 			break ;
 		eat(philo);
 		signal_completion(philo);
-		if (data->simulation_over)
+		if (is_simulation_over(data))
 			break ;
 		sleep_phase(philo);
 	}

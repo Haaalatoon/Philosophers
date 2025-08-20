@@ -26,7 +26,9 @@ int	find_most_starved(t_data *data)
 	i = 0;
 	while (i < data->num_philosophers)
 	{
+		pthread_mutex_lock(&data->philosophers[i].state_mutex);
 		wait_time = current_time - data->philosophers[i].last_meal_time;
+		pthread_mutex_unlock(&data->philosophers[i].state_mutex);
 		if (wait_time > max_wait_time)
 		{
 			max_wait_time = wait_time;
@@ -45,14 +47,12 @@ void	promote_starving_philosopher(t_data *data, int philosopher_id)
 	if (queue_init(&temp_queue, data->num_philosophers * 2) != 0)
 		return ;
 	queue_enqueue(&temp_queue, philosopher_id);
-	// while (!queue_is_empty(&data->admission_queue))
 	while (!data->admission_queue.size)
 	{
 		current_id = queue_dequeue(&data->admission_queue);
 		if (current_id != philosopher_id)
 			queue_enqueue(&temp_queue, current_id);
 	}
-	// while (!queue_is_empty(&temp_queue))
 	while (!temp_queue.size)
 	{
 		current_id = queue_dequeue(&temp_queue);
@@ -72,8 +72,10 @@ void	handle_starvation(t_data *data)
 	most_starved = find_most_starved(data);
 	if (most_starved != -1)
 	{
+		pthread_mutex_lock(&data->philosophers[most_starved].state_mutex);
 		time_since_meal = current_time
 			- data->philosophers[most_starved].last_meal_time;
+		pthread_mutex_unlock(&data->philosophers[most_starved].state_mutex);
 		if (time_since_meal > (data->time_to_die))
 		{
 			if (!data->philosophers[most_starved].gate_flag)

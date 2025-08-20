@@ -40,6 +40,7 @@ typedef struct s_philosopher
 	volatile int	gate_flag;
 	volatile int	done_flag;
 	pthread_t		thread;
+	pthread_mutex_t	state_mutex;
 	struct s_data	*data;
 }					t_philosopher;
 
@@ -64,6 +65,7 @@ typedef struct s_data
 	t_queue			admission_queue;
 	pthread_mutex_t	admission_mutex;
 	pthread_mutex_t	print_mutex;
+	pthread_mutex_t	simulation_mutex;
 	pthread_t		manager_thread;
 	pthread_t		watchdog_thread;
 }					t_data;
@@ -77,6 +79,8 @@ void				cleanup_data(t_data *data);
 long long			get_time_ms(void);
 void				ft_sleep(long ms);
 void				print_status(t_philosopher *philo, char *status);
+int					is_simulation_over(t_data *data);
+void				set_simulation_over(t_data *data);
 
 // queue.c
 int					queue_init(t_queue *queue, int capacity);
@@ -84,8 +88,6 @@ void				queue_destroy(t_queue *queue);
 int					queue_enqueue(t_queue *queue, int philosopher_id);
 int					queue_dequeue(t_queue *queue);
 int					queue_peek(t_queue *queue);
-// int					queue_is_empty(t_queue *queue);
-// int					queue_size(t_queue *queue);
 int					queue_contains(t_queue *queue, int philosopher_id);
 
 // philosopher.c

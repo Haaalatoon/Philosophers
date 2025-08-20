@@ -45,7 +45,7 @@ void	print_status(t_philosopher *philo, char *status)
 	long long	timestamp;
 
 	pthread_mutex_lock(&philo->data->print_mutex);
-	if (!philo->data->simulation_over)
+	if (!is_simulation_over(philo->data))
 	{
 		timestamp = get_time_ms() - philo->data->start_time;
 		printf("%lld %d %s\n", timestamp, philo->id + 1, status);

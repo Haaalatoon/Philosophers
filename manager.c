@@ -14,7 +14,9 @@
 
 static void	allow_to_eat(t_data *data, int philosopher_id)
 {
+	pthread_mutex_lock(&data->philosophers[philosopher_id].state_mutex);
 	data->philosophers[philosopher_id].gate_flag = 1;
+	pthread_mutex_unlock(&data->philosophers[philosopher_id].state_mutex);
 	reserve_forks(data, philosopher_id);
 }
 
@@ -25,11 +27,13 @@ static void	collect_finished_forks(t_data *data)
 	i = 0;
 	while (i < data->num_philosophers)
 	{
+		pthread_mutex_lock(&data->philosophers[i].state_mutex);
 		if (data->philosophers[i].done_flag)
 		{
 			free_forks(data, i);
 			data->philosophers[i].done_flag = 0;
 		}
+		pthread_mutex_unlock(&data->philosophers[i].state_mutex);
 		i++;
 	}
 }
@@ -64,7 +68,6 @@ static void	feed_waiting_philosophers(t_data *data)
 	int	idx;
 	int	candidate_id;
 
-	// qsize = queue_size(&data->admission_queue);
 	q_size = data->admission_queue.size;
 	idx = 0;
 	while (idx < q_size)
@@ -86,13 +89,13 @@ void	*manager_routine(void *arg)
 	t_data	*data;
 
 	data = (t_data *)arg;
-	while (!data->simulation_over)
+	while (!is_simulation_over(data))
 	{
 		pthread_mutex_lock(&data->admission_mutex);
 		collect_finished_forks(data);
 		feed_waiting_philosophers(data);
 		pthread_mutex_unlock(&data->admission_mutex);
-		usleep(500);
+		usleep(100);
 	}
 	return (NULL);
 }

@@ -21,10 +21,12 @@ static void	take_release(t_philosopher *philo, int first_fork, int second_fork)
 	print_status(philo, "has taken a fork");
 	pthread_mutex_lock(&data->forks[second_fork]);
 	print_status(philo, "has taken a fork");
-	print_status(philo, "is eating");
+	pthread_mutex_lock(&philo->state_mutex);
 	philo->last_meal_time = get_time_ms();
-	ft_sleep(data->time_to_eat);
+	print_status(philo, "is eating");
 	philo->meals_eaten++;
+	pthread_mutex_unlock(&philo->state_mutex);
+	ft_sleep(data->time_to_eat);
 	pthread_mutex_unlock(&data->forks[second_fork]);
 	pthread_mutex_unlock(&data->forks[first_fork]);
 }
@@ -71,7 +73,8 @@ void	eat(t_philosopher *philo)
 
 void	sleep_phase(t_philosopher *philo)
 {
-	if (philo->data->simulation_over)
+	if (philo->meals_eaten < philo->data->meals_required
+		|| philo->data->meals_required <= 0)
 		print_status(philo, "is sleeping");
 	ft_sleep(philo->data->time_to_sleep);
 }

@@ -18,6 +18,8 @@ static int	init_mutexes(t_data *data)
 		return (1);
 	if (pthread_mutex_init(&data->print_mutex, NULL) != 0)
 		return (1);
+	if (pthread_mutex_init(&data->simulation_mutex, NULL) != 0)
+		return (1);
 	return (0);
 }
 
@@ -62,6 +64,8 @@ static int	init_philosophers(t_data *data)
 		data->philosophers[i].gate_flag = 0;
 		data->philosophers[i].done_flag = 0;
 		data->philosophers[i].data = data;
+		if (pthread_mutex_init(&data->philosophers[i].state_mutex, NULL) != 0)
+			return (1);
 		i++;
 	}
 	return (0);
@@ -104,11 +108,38 @@ void	cleanup_data(t_data *data)
 		}
 		free(data->forks);
 	}
+	if (data->philosophers)
+	{
+		i = 0;
+		while (i < data->num_philosophers)
+		{
+			pthread_mutex_destroy(&data->philosophers[i].state_mutex);
+			i++;
+		}
+	}
 	if (data->fork_states)
 		free(data->fork_states);
 	pthread_mutex_destroy(&data->admission_mutex);
 	pthread_mutex_destroy(&data->print_mutex);
+	pthread_mutex_destroy(&data->simulation_mutex);
 	queue_destroy(&data->admission_queue);
 	if (data->philosophers)
 		free(data->philosophers);
+}
+
+int	is_simulation_over(t_data *data)
+{
+	int	result;
+
+	pthread_mutex_lock(&data->simulation_mutex);
+	result = data->simulation_over;
+	pthread_mutex_unlock(&data->simulation_mutex);
+	return (result);
+}
+
+void	set_simulation_over(t_data *data)
+{
+	pthread_mutex_lock(&data->simulation_mutex);
+	data->simulation_over = 1;
+	pthread_mutex_unlock(&data->simulation_mutex);
 }

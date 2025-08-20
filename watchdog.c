@@ -22,11 +22,13 @@ static int	check_deaths(t_data *data)
 	i = 0;
 	while (i < data->num_philosophers)
 	{
+		pthread_mutex_lock(&data->philosophers[i].state_mutex);
 		time_since_meal = current_time - data->philosophers[i].last_meal_time;
+		pthread_mutex_unlock(&data->philosophers[i].state_mutex);
 		if (time_since_meal >= data->time_to_die)
 		{
 			print_status(&data->philosophers[i], "died");
-			data->simulation_over = 1;
+			set_simulation_over(data);
 			return (1);
 		}
 		i++;
@@ -37,13 +39,17 @@ static int	check_deaths(t_data *data)
 static int	all_fed(t_data *data)
 {
 	int	i;
+	int	meals_eaten;
 
 	if (data->meals_required <= 0)
 		return (0);
 	i = 0;
 	while (i < data->num_philosophers)
 	{
-		if (data->philosophers[i].meals_eaten < data->meals_required)
+		pthread_mutex_lock(&data->philosophers[i].state_mutex);
+		meals_eaten = data->philosophers[i].meals_eaten;
+		pthread_mutex_unlock(&data->philosophers[i].state_mutex);
+		if (meals_eaten < data->meals_required)
 			return (0);
 		i++;
 	}
@@ -60,18 +66,18 @@ static void	check_and_handle_all_fed(t_data *data, int *should_break)
 {
 	if (all_fed(data))
 	{
-		data->simulation_over = 1;
+		set_simulation_over(data);
 		*should_break = 1;
 	}
 }
 
 void	*watchdog_routine(void *arg)
 {
-	t_data	*data;
 	int		should_break;
+	t_data	*data;
 
 	data = (t_data *)arg;
-	while (!data->simulation_over)
+	while (!is_simulation_over(data))
 	{
 		should_break = 0;
 		check_and_handle_deaths(data, &should_break);

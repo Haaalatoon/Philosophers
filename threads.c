@@ -23,7 +23,6 @@ int	start_threads(t_data *data)
 				philosopher_routine, &data->philosophers[i]) != 0)
 		{
 			printf("Error: Failed to create philosopher thread %d\n", i + 1);
-			data->simulation_over = 1;
 			return (1);
 		}
 		i++;
@@ -68,7 +67,6 @@ int	create_watchdog_thread(t_data *data)
 			data) != 0)
 	{
 		printf("Error: Failed to create watchdog thread\n");
-		data->simulation_over = 1;
 		pthread_join(data->manager_thread, NULL);
 		cleanup_data(data);
 		return (1);
