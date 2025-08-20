@@ -36,9 +36,10 @@ static void	single_philosopher(t_philosopher *philo, int fork)
 	t_data	*data;
 
 	data = philo->data;
+	usleep(40000);
 	pthread_mutex_lock(&data->forks[fork]);
 	print_status(philo, "has taken a fork");
-	ft_sleep(data->time_to_die);
+	ft_sleep(data->time_to_die + 1);
 	pthread_mutex_unlock(&data->forks[fork]);
 }
 

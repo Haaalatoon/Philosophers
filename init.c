@@ -102,24 +102,18 @@ void	cleanup_data(t_data *data)
 	{
 		i = 0;
 		while (i < data->num_philosophers)
-		{
-			pthread_mutex_destroy(&data->forks[i]);
-			i++;
-		}
+			pthread_mutex_destroy(&data->forks[i++]);
 		free(data->forks);
 	}
 	if (data->philosophers)
 	{
 		i = 0;
 		while (i < data->num_philosophers)
-		{
-			pthread_mutex_destroy(&data->philosophers[i].state_mutex);
-			i++;
-		}
+			pthread_mutex_destroy(&data->philosophers[i++].state_mutex);
 	}
 	if (data->fork_states)
 		free(data->fork_states);
-	destroy_mutexes(data);
 	if (data->philosophers)
 		free(data->philosophers);
+	destroy_mutexes(data);
 }

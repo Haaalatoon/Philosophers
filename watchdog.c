@@ -25,7 +25,7 @@ static int	check_deaths(t_data *data)
 		pthread_mutex_lock(&data->philosophers[i].state_mutex);
 		time_since_meal = current_time - data->philosophers[i].last_meal_time;
 		pthread_mutex_unlock(&data->philosophers[i].state_mutex);
-		if (time_since_meal >= data->time_to_die)
+		if (time_since_meal > data->time_to_die)
 		{
 			print_status(&data->philosophers[i], "died");
 			set_simulation_over(data);

@@ -80,7 +80,13 @@ int	parse_arguments(int argc, char **argv, t_data *data)
 {
 	if (argc < 5 || argc > 6)
 	{
-		printf("Usage: %s NB NB NB NB [NB]\n", argv[0]);
+		printf("Usage: %s philos t_die t_eat t_sleep [iters]\n" \
+	"\tphilos : number of philosophers\n" \
+	"\tt_die  : time to die in milliseconds\n" \
+	"\tt_eat  : time to eat in milliseconds\n" \
+	"\tt_sleep: time to sleep in milliseconds\n" \
+	"\titers  : number of times each philosopher must eat (optional)\n"\
+	, argv[0]);
 		return (1);
 	}
 	data->num_philosophers = ft_atoi(argv[1]);
@@ -91,12 +97,9 @@ int	parse_arguments(int argc, char **argv, t_data *data)
 		data->meals_required = ft_atoi(argv[5]);
 	else
 		data->meals_required = -1;
-	if (data->num_philosophers <= 0 || data->num_philosophers > 200
+	if (data->num_philosophers <= 0
 		|| data->time_to_die < 0 || data->time_to_eat < 0
 		|| data->time_to_sleep < 0 || (argc == 6 && data->meals_required <= 0))
-	{
-		printf("Error: Invalid arguments\n");
-		return (1);
-	}
+		return (printf("Error: Invalid arguments\n"), 1);
 	return (0);
 }
